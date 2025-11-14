@@ -43,10 +43,10 @@ export default function Header() {
 
         {/* Auth actions */}
         <div className="ml-auto hidden sm:flex items-center gap-2">
-          <Link href="/(auth)/login" className="rounded-md px-3 py-2 text-sm hover:bg-black/5 dark:hover:bg-white/10">
+          <Link href="/login" className="rounded-md px-3 py-2 text-sm hover:bg-black/5 dark:hover:bg-white/10">
             Sign in
           </Link>
-          <Link href="/(auth)/signup" className="rounded-md border px-3 py-2 text-sm hover:bg-black/5 dark:hover:bg-white/10">
+          <Link href="/signup" className="rounded-md border px-3 py-2 text-sm hover:bg-black/5 dark:hover:bg-white/10">
             Sign Up
           </Link>
         </div>
@@ -92,10 +92,10 @@ export default function Header() {
               />
             </div>
             <div className="flex items-center gap-2">
-              <Link href="/(auth)/login" className="flex-1 rounded-md px-3 py-2 text-sm text-center hover:bg-black/5 dark:hover:bg-white/10" onClick={() => setOpen(false)}>
+              <Link href="/login" className="flex-1 rounded-md px-3 py-2 text-sm text-center hover:bg-black/5 dark:hover:bg-white/10" onClick={() => setOpen(false)}>
                 Sign in
               </Link>
-              <Link href="/(auth)/signup" className="flex-1 rounded-md border px-3 py-2 text-sm text-center hover:bg-black/5 dark:hover:bg-white/10" onClick={() => setOpen(false)}>
+              <Link href="/signup" className="flex-1 rounded-md border px-3 py-2 text-sm text-center hover:bg-black/5 dark:hover:bg-white/10" onClick={() => setOpen(false)}>
                 Sign Up
               </Link>
             </div>
