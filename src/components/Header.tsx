@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import React from "react";
 
 const nav = [
@@ -14,8 +15,9 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 border-b bg-background/80 backdrop-blur">
       <div className="mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
-        <Link href="/" className="font-semibold text-lg">
-          MediumX
+        <Link href="/" className="flex items-center gap-2 font-semibold text-lg">
+          <Image src="/logo.svg" alt="Logo" width={20} height={20} />
+          <span>MediumX</span>
         </Link>
         <nav className="flex items-center gap-4 text-sm">
           {nav.map((n) => (
