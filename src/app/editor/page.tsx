@@ -6,9 +6,8 @@ import { SESSION_COOKIE, getUserBySession } from "@/lib/auth";
 export const metadata = { title: "Editor | MediumX" };
 
 export default async function EditorPage() {
-  const cookieStore = cookies() as any;
-  // Some Next.js typings mark cookies() as Promise; support both by awaiting if needed.
-  const store = typeof (cookieStore as Promise<any>)?.then === "function" ? (await cookieStore) : cookieStore;
+  const cookieStore = await cookies() as any;
+  const store = cookieStore;
   const token = store.get(SESSION_COOKIE)?.value as string | undefined;
   const user = getUserBySession(token);
   if (!user) redirect("/login");
