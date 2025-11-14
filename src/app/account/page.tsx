@@ -7,8 +7,11 @@ export const metadata = {
   title: "Account | MediumX",
 };
 
-export default function AccountPage() {
-  const token = cookies().get(SESSION_COOKIE)?.value;
+export default async function AccountPage() {
+  const cookieStore = cookies() as any;
+  // Some Next.js typings mark cookies() as Promise; support both by awaiting if needed.
+  const store = typeof (cookieStore as Promise<any>)?.then === "function" ? (await cookieStore) : cookieStore;
+  const token = store.get(SESSION_COOKIE)?.value as string | undefined;
   const user = getUserBySession(token);
   if (!user) redirect("/login");
   return (
