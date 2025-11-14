@@ -4,8 +4,6 @@ import Container from "@/components/Container";
 import React from "react";
 import { useRouter } from "next/navigation";
 
-export const metadata = { title: "Sign Up | MediumX" };
-
 export default function SignupPage() {
   const router = useRouter();
   const [name, setName] = React.useState("");
