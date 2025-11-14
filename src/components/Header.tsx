@@ -95,7 +95,7 @@ export default function Header() {
               <Link href="/(auth)/login" className="flex-1 rounded-md px-3 py-2 text-sm text-center hover:bg-black/5 dark:hover:bg-white/10" onClick={() => setOpen(false)}>
                 Sign in
               </Link>
-              <Link href="/(auth)/signup" className="flex-1 rounded-md border px-3 py-2 text-sm text-center hover:bg-black/5 dark:hover:bg:white/10" onClick={() => setOpen(false)}>
+              <Link href="/(auth)/signup" className="flex-1 rounded-md border px-3 py-2 text-sm text-center hover:bg-black/5 dark:hover:bg-white/10" onClick={() => setOpen(false)}>
                 Sign Up
               </Link>
             </div>
