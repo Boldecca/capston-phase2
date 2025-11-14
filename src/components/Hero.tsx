@@ -5,32 +5,29 @@ import Image from "next/image";
 export default function Hero() {
   return (
     <section className="py-12 sm:py-16">
-      <div className="grid items-center gap-8 sm:grid-cols-2">
-        <div>
-          <h1 className="mb-4 text-4xl font-semibold tracking-tight sm:text-5xl">
-            Welcome to MediumX
-          </h1>
-          <p className="mb-6 text-muted-foreground">
-            A clean, modern publishing starter built with Next.js. Share ideas,
-            publish posts, and grow your audience.
-          </p>
-          <div className="flex gap-3">
-            <a
-              href="/posts"
-              className="inline-flex items-center justify-center rounded-md bg-foreground px-4 py-2 text-background transition-colors hover:opacity-90"
-            >
-              Explore Posts
-            </a>
-            <a
-              href="/about"
-              className="inline-flex items-center justify-center rounded-md border px-4 py-2 transition-colors hover:bg-black/5 dark:hover:bg-white/10"
-            >
-              Learn More
-            </a>
-          </div>
-        </div>
-        <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg ring-1 ring-border">
-          <Image src="/hero.svg" alt="Hero" fill className="object-cover" priority />
+      <div className="max-w-3xl">
+        <h1 className="mb-4 text-4xl font-semibold tracking-tight sm:text-6xl">
+          Share your ideas
+          <br />
+          with the world
+        </h1>
+        <p className="mb-6 max-w-2xl text-muted-foreground">
+          PublishHub is a modern platform for writers, developers, and creators to
+          share their stories, ideas, and expertise with a global audience.
+        </p>
+        <div className="flex flex-wrap gap-3">
+          <a
+            href="/editor"
+            className="inline-flex items-center justify-center rounded-md bg-foreground px-4 py-2 text-background transition-colors hover:opacity-90"
+          >
+            Start Writing
+          </a>
+          <a
+            href="/posts"
+            className="inline-flex items-center justify-center rounded-md border px-4 py-2 transition-colors hover:bg-black/5 dark:hover:bg-white/10"
+          >
+            Explore Stories
+          </a>
         </div>
       </div>
     </section>
