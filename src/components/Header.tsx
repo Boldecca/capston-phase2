@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import React from "react";
+import { useRouter } from "next/navigation";
 
 const nav = [
   { href: "/", label: "Home" },
@@ -11,7 +12,31 @@ const nav = [
 ];
 
 export default function Header() {
+  const router = useRouter();
   const [open, setOpen] = React.useState(false);
+  const [user, setUser] = React.useState<{ name: string; email: string } | null>(null);
+
+  React.useEffect(() => {
+    let alive = true;
+    fetch("/api/auth/me").then(async (r) => {
+      if (!alive) return;
+      if (r.ok) {
+        const j = await r.json();
+        setUser(j?.data?.user ?? null);
+      } else {
+        setUser(null);
+      }
+    }).catch(() => setUser(null));
+    return () => { alive = false; };
+  }, []);
+
+  async function onLogout() {
+    await fetch("/api/auth/logout", { method: "POST" });
+    setUser(null);
+    router.push("/");
+    router.refresh();
+  }
+
   return (
     <header className="sticky top-0 z-50 border-b bg-background/80 backdrop-blur">
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 h-14 flex items-center gap-4">
@@ -43,12 +68,25 @@ export default function Header() {
 
         {/* Auth actions */}
         <div className="ml-auto hidden sm:flex items-center gap-2">
-          <Link href="/login" className="rounded-md px-3 py-2 text-sm hover:bg-black/5 dark:hover:bg-white/10">
-            Sign in
-          </Link>
-          <Link href="/signup" className="rounded-md border px-3 py-2 text-sm hover:bg-black/5 dark:hover:bg-white/10">
-            Sign Up
-          </Link>
+          {user ? (
+            <>
+              <Link href="/account" className="rounded-md px-3 py-2 text-sm hover:bg-black/5 dark:hover:bg-white/10">
+                Account
+              </Link>
+              <button onClick={onLogout} className="rounded-md border px-3 py-2 text-sm hover:bg-black/5 dark:hover:bg-white/10">
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link href="/login" className="rounded-md px-3 py-2 text-sm hover:bg-black/5 dark:hover:bg-white/10">
+                Sign in
+              </Link>
+              <Link href="/signup" className="rounded-md border px-3 py-2 text-sm hover:bg-black/5 dark:hover:bg-white/10">
+                Sign Up
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile toggle */}
@@ -92,12 +130,25 @@ export default function Header() {
               />
             </div>
             <div className="flex items-center gap-2">
-              <Link href="/login" className="flex-1 rounded-md px-3 py-2 text-sm text-center hover:bg-black/5 dark:hover:bg-white/10" onClick={() => setOpen(false)}>
-                Sign in
-              </Link>
-              <Link href="/signup" className="flex-1 rounded-md border px-3 py-2 text-sm text-center hover:bg-black/5 dark:hover:bg-white/10" onClick={() => setOpen(false)}>
-                Sign Up
-              </Link>
+              {user ? (
+                <>
+                  <Link href="/account" className="flex-1 rounded-md px-3 py-2 text-sm text-center hover:bg-black/5 dark:hover:bg-white/10" onClick={() => setOpen(false)}>
+                    Account
+                  </Link>
+                  <button onClick={() => { onLogout(); setOpen(false); }} className="flex-1 rounded-md border px-3 py-2 text-sm text-center hover:bg-black/5 dark:hover:bg-white/10">
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link href="/login" className="flex-1 rounded-md px-3 py-2 text-sm text-center hover:bg-black/5 dark:hover:bg-white/10" onClick={() => setOpen(false)}>
+                    Sign in
+                  </Link>
+                  <Link href="/signup" className="flex-1 rounded-md border px-3 py-2 text-sm text-center hover:bg-black/5 dark:hover:bg-white/10" onClick={() => setOpen(false)}>
+                    Sign Up
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>
