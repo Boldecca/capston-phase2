@@ -5,8 +5,16 @@ export const SESSION_COOKIE = "session";
 type UserRecord = SessionUser & { password: string };
 type SessionRecord = { token: string; userId: string; createdAt: number };
 
-const users = new Map<string, UserRecord>();
-const sessions = new Map<string, SessionRecord>();
+// Persist maps across Fast Refresh in development to avoid losing sessions
+declare global {
+  // eslint-disable-next-line no-var
+  var __auth_users__: Map<string, UserRecord> | undefined;
+  // eslint-disable-next-line no-var
+  var __auth_sessions__: Map<string, SessionRecord> | undefined;
+}
+
+const users: Map<string, UserRecord> = (globalThis.__auth_users__ ??= new Map());
+const sessions: Map<string, SessionRecord> = (globalThis.__auth_sessions__ ??= new Map());
 
 export function getUserByEmail(email: string) {
   for (const u of users.values()) {
