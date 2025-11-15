@@ -9,6 +9,9 @@ const stories = [
     author: "Sarah Chen",
     date: "Nov 14, 2025",
     read: "5 min read",
+    tag: "Next.js",
+    image:
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/attachments/gen-images/public/next-js-development-modern-workspace-Fb7MnZVVq6SuxtiE1cK3MHBWkh9vBz.jpg",
   },
   {
     title: "The Future of Web Development",
@@ -17,6 +20,9 @@ const stories = [
     author: "Alex Johnson",
     date: "Nov 13, 2025",
     read: "6 min read",
+    tag: "Trending",
+    image:
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/attachments/gen-images/public/future-technology-digital-landscape-36ibjVoESvJqYlf5S8mIRoBad4s5Go.jpg",
   },
   {
     title: "TypeScript Best Practices",
@@ -25,6 +31,9 @@ const stories = [
     author: "Jordan Lee",
     date: "Nov 12, 2025",
     read: "10 min read",
+    tag: "TypeScript",
+    image:
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/attachments/gen-images/public/typescript-code-programming-G19xlvtC0F13l8qK5GDLI8tbqb6Rzt.jpg",
   },
 ] as const;
 
@@ -43,6 +52,20 @@ export default function FeaturedStories() {
             className="rounded-lg border p-4 transition-colors hover:bg-black/[.02] dark:hover:bg-white/[.03]"
           >
             <Link href="/posts" className="block">
+              <div className="relative mb-3 overflow-hidden rounded-md border">
+                <div className="absolute left-2 top-2 z-10 rounded-full bg-background/90 px-2 py-1 text-xs font-medium">
+                  {s.tag}
+                </div>
+                <div className="relative aspect-[16/9] w-full">
+                  <Image
+                    src={s.image}
+                    alt={s.title}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 400px"
+                    className="object-cover"
+                  />
+                </div>
+              </div>
               <h3 className="mb-1 text-base font-semibold">{s.title}</h3>
               <p className="mb-4 text-sm text-muted-foreground line-clamp-2">{s.excerpt}</p>
             </Link>

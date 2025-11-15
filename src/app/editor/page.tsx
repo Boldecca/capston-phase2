@@ -2,6 +2,7 @@ import Container from "@/components/Container";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { SESSION_COOKIE, getUserBySession } from "@/lib/auth";
+import { RichEditor, ImageUploader } from "@/components/Editor";
 
 export const metadata = { title: "Editor | MediumX" };
 
@@ -33,12 +34,15 @@ export default async function EditorPage() {
               <div className="h-10 rounded-lg border bg-background/50 px-3 py-2 text-sm text-muted-foreground ring-0 transition-shadow focus-within:ring-2 focus-within:ring-primary/30">
                 <div className="truncate">Post title</div>
               </div>
-              <div className="h-56 rounded-lg border bg-background/50 p-4">
-                <div className="h-full w-full rounded-md bg-muted/50 animate-pulse" />
-              </div>
+              <RichEditor />
             </div>
 
-            <div className="mt-5 flex items-center justify-end gap-2">
+            <div className="mt-6">
+              <h3 className="mb-2 text-sm font-medium">Images</h3>
+              <ImageUploader />
+            </div>
+
+            <div className="mt-6 flex items-center justify-end gap-2">
               <button className="inline-flex items-center rounded-lg border px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted/60">
                 Save draft
               </button>
