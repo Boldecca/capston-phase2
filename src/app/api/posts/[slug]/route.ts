@@ -1,14 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { deletePost, getPostBySlug, updatePost } from "@/lib/store";
 
-export async function GET(_: NextRequest, { params }: { params: { slug: string } }) {
-  const post = getPostBySlug(params.slug);
+export async function GET(_: NextRequest, context: { params: Promise<{ slug: string }> }) {
+  const { slug } = await context.params;
+  const post = getPostBySlug(slug);
   if (!post) return NextResponse.json({ error: "Not found" }, { status: 404 });
   return NextResponse.json({ data: post });
 }
 
-export async function PUT(req: NextRequest, { params }: { params: { slug: string } }) {
-  const current = getPostBySlug(params.slug);
+export async function PUT(req: NextRequest, context: { params: Promise<{ slug: string }> }) {
+  const { slug } = await context.params;
+  const current = getPostBySlug(slug);
   if (!current) return NextResponse.json({ error: "Not found" }, { status: 404 });
   const body = await req.json().catch(() => ({}));
   const patch: any = {};
@@ -21,8 +23,9 @@ export async function PUT(req: NextRequest, { params }: { params: { slug: string
   return NextResponse.json({ data: updated });
 }
 
-export async function DELETE(_: NextRequest, { params }: { params: { slug: string } }) {
-  const current = getPostBySlug(params.slug);
+export async function DELETE(_: NextRequest, context: { params: Promise<{ slug: string }> }) {
+  const { slug } = await context.params;
+  const current = getPostBySlug(slug);
   if (!current) return NextResponse.json({ error: "Not found" }, { status: 404 });
   deletePost(current.id);
   return NextResponse.json({ ok: true });
