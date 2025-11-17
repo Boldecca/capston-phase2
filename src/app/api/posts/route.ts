@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connect } from "@/lib/mongodb";
+import connect from "@/lib/mongodb";
 import Post from "@/models/Post";
 
 // GET /api/posts - list published posts
