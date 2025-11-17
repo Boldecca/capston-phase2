@@ -25,7 +25,7 @@ export default function LoginPage() {
         const j = await res.json().catch(() => ({}));
         throw new Error((j as any).error || "Login failed");
       }
-      router.push("/account");
+      router.push("/dashboard");
     } catch (err: any) {
       setError(err.message || "Login failed");
     } finally {

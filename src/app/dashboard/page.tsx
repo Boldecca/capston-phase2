@@ -2,22 +2,22 @@
 
 import { useState } from "react";
 import DashboardHeader from "@/components/Dashboard/DashboardHeader";
-import Sidebar from "../../components/Dashboard/Sidebar";
+import Sidebar from "@/components/Dashboard/Sidebar";
 import MyPosts from "@/components/Dashboard/MyPosts";
-import Comments from "../../components/Dashboard/Comments";
-import Profile from "../../components/Dashboard/Profile";
+import Comments from "@/components/Dashboard/Comments";
+import Profile from "@/components/Dashboard/Profile";
 import Settings from "@/components/Dashboard/Settings";
 import NewPostButton from "@/components/Dashboard/NewPostButton";
 
+type TabType = "dashboard" | "posts" | "comments" | "profile" | "settings";
+
 export default function DashboardPage() {
-  const [activeTab, setActiveTab] = useState("dashboard");
+  const [activeTab, setActiveTab] = useState<TabType>("dashboard");
 
   const renderContent = () => {
     switch (activeTab) {
-      case "dashboard":
-        return <DashboardContent />;
       case "posts":
-        return <MyPosts />;
+        return <PostsContent />;
       case "comments":
         return <Comments />;
       case "profile":
@@ -46,21 +46,31 @@ function DashboardContent() {
   return (
     <div>
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-4xl font-bold">Dashboard</h1>
+        <h1 className="text-4xl font-bold text-gray-900">Dashboard</h1>
         <NewPostButton />
       </div>
 
-      {/* Your Posts Section */}
       <div className="mb-12">
-        <h2 className="text-2xl font-bold mb-6">Your Posts</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">Your Posts</h2>
         <MyPosts />
       </div>
 
-      {/* Recent Activity Section */}
       <div>
-        <h2 className="text-2xl font-bold mb-6">Recent Activity</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">Recent Activity</h2>
         <RecentActivity />
       </div>
+    </div>
+  );
+}
+
+function PostsContent() {
+  return (
+    <div>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-4xl font-bold text-gray-900">Your Posts</h1>
+        <NewPostButton />
+      </div>
+      <MyPosts />
     </div>
   );
 }
@@ -96,7 +106,7 @@ function RecentActivity() {
           key={activity.id}
           className="px-6 py-4 border-b border-gray-200 last:border-b-0 flex justify-between items-center hover:bg-gray-50 transition"
         >
-          <p className="text-gray-800">{activity.text}</p>
+          <p className="text-gray-800 font-medium">{activity.text}</p>
           <span className="text-gray-500 text-sm">{activity.date}</span>
         </div>
       ))}
