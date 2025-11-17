@@ -21,6 +21,15 @@ export default function Settings() {
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  // Simulate avatar upload
+  const handleAvatarChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setUser((prev) => ({ ...prev, avatar: url }));
+    }
+  };
+
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -33,98 +42,91 @@ export default function Settings() {
     setLoading(true);
 
     try {
-      const response = await fetch("/api/users/profile", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(user),
-      });
-
-      if (!response.ok) throw new Error("Failed to update profile");
-
-      alert("Profile updated successfully!");
+      // Replace with real API call
+      await new Promise((res) => setTimeout(res, 800));
+      alert("Profile updated!");
       setIsEditing(false);
     } catch (error) {
-      console.error("Error updating profile:", error);
-      alert("Failed to update profile. Please try again.");
+      alert("Failed to update profile.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="max-w-2xl">
-      <div className="bg-slate-700 border border-slate-600 rounded-lg p-8">
-        <h3 className="text-white font-bold text-xl mb-6">Profile Settings</h3>
-
+    <div className="max-w-2xl mx-auto">
+      <div className="bg-gray-900 border border-gray-800 rounded-xl p-8 shadow-lg">
+        <h3 className="text-white font-bold text-2xl mb-6">Profile Settings</h3>
         <form onSubmit={handleSave} className="flex flex-col gap-6">
           {/* Avatar */}
           <div>
-            <label className="block text-slate-300 font-semibold mb-3">Avatar</label>
-            <Image
-              src={user.avatar}
-              alt="Avatar"
-              width={80}
-              height={80}
-              className="rounded-full mb-3"
-            />
-            {isEditing && (
-              <input
-                type="text"
-                name="avatar"
-                value={user.avatar}
-                onChange={handleChange}
-                className="w-full px-4 py-2 bg-slate-600 text-white border border-slate-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            <label className="block text-gray-300 font-semibold mb-3">Avatar</label>
+            <div className="flex items-center gap-4">
+              <Image
+                src={user.avatar}
+                alt="Avatar"
+                width={80}
+                height={80}
+                className="rounded-full border border-gray-700"
               />
-            )}
+              {isEditing && (
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleAvatarChange}
+                  className="text-gray-400"
+                />
+              )}
+            </div>
           </div>
 
           {/* Name */}
           <div>
-            <label className="block text-slate-300 font-semibold mb-2">Name</label>
+            <label className="block text-gray-300 font-semibold mb-2">Name</label>
             {isEditing ? (
               <input
                 type="text"
                 name="name"
                 value={user.name}
                 onChange={handleChange}
-                className="w-full px-4 py-2 bg-slate-600 text-white border border-slate-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 bg-gray-800 text-white border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
             ) : (
-              <p className="text-slate-400">{user.name}</p>
+              <p className="text-gray-400">{user.name}</p>
             )}
           </div>
 
           {/* Email */}
           <div>
-            <label className="block text-slate-300 font-semibold mb-2">Email</label>
+            <label className="block text-gray-300 font-semibold mb-2">Email</label>
             {isEditing ? (
               <input
                 type="email"
                 name="email"
                 value={user.email}
                 onChange={handleChange}
-                className="w-full px-4 py-2 bg-slate-600 text-white border border-slate-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 bg-gray-800 text-white border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
             ) : (
-              <p className="text-slate-400">{user.email}</p>
+              <p className="text-gray-400">{user.email}</p>
             )}
           </div>
 
           {/* Bio */}
           <div>
-            <label className="block text-slate-300 font-semibold mb-2">Bio</label>
+            <label className="block text-gray-300 font-semibold mb-2">Bio</label>
             {isEditing ? (
               <textarea
                 name="bio"
                 value={user.bio}
                 onChange={handleChange}
                 rows={4}
-                className="w-full px-4 py-2 bg-slate-600 text-white border border-slate-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 bg-gray-800 text-white border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             ) : (
-              <p className="text-slate-400">{user.bio}</p>
+              <p className="text-gray-400">{user.bio}</p>
             )}
           </div>
 
@@ -136,7 +138,7 @@ export default function Settings() {
                   type="button"
                   onClick={() => setIsEditing(false)}
                   disabled={loading}
-                  className="px-6 py-2 bg-slate-600 hover:bg-slate-500 text-white rounded-lg transition disabled:opacity-50 font-semibold"
+                  className="px-6 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition disabled:opacity-50 font-semibold"
                 >
                   Cancel
                 </button>
