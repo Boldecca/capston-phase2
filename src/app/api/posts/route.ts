@@ -1,44 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createPost, listPosts } from "@/lib/store";
-import { getUserBySession, SESSION_COOKIE } from "@/lib/auth";
-import type { Post } from "@/lib/types";
+import { connect } from "@/lib/mongodb";
+import Post from "@/models/Post";
 
-function slugify(input: string) {
-  return input
-    .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .trim()
-    .replace(/\s+/g, "-")
-    .slice(0, 80);
-}
-
+// GET /api/posts - list published posts
 export async function GET() {
-  const posts = listPosts();
-  return NextResponse.json({ data: posts });
+  await connect();
+  const posts = await Post.find({ published: true })
+    .populate("author", "username avatarUrl")
+    .sort({ createdAt: -1 })
+    .limit(20)
+    .lean();
+  return NextResponse.json(posts);
 }
 
+// POST /api/posts - create a post (no auth here; integrate auth separately)
 export async function POST(req: NextRequest) {
-  const token = req.cookies.get(SESSION_COOKIE)?.value;
-  const user = getUserBySession(token);
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-  const body = await req.json().catch(() => ({}));
-  const title = String(body?.title || "").trim();
-  const content = String(body?.content || "").trim();
-  const tags = Array.isArray(body?.tags) ? (body.tags as string[]).map((t) => String(t).trim()).filter(Boolean) : [];
-  const coverImage = body?.coverImage ? String(body.coverImage) : undefined;
-  const state = (body?.state === "published" ? "published" : "draft") as Post["state"];
-  if (!title || !content) return NextResponse.json({ error: "Missing title or content" }, { status: 400 });
-
-  const slug = slugify(title);
-  const post = createPost({
-    slug,
-    title,
-    content,
-    tags,
-    coverImage,
-    authorId: user.id,
-    state,
-  });
-  return NextResponse.json({ data: post }, { status: 201 });
+  await connect();
+  const body = await req.json();
+  if (!body.title || !body.content || !body.author) {
+    return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+  }
+  const post = await Post.create(body);
+  return NextResponse.json(post, { status: 201 });
 }
