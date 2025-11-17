@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 
 interface User {
@@ -13,16 +13,12 @@ interface User {
 
 export default function DashboardHeader() {
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>({
+    name: "John Doe",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=John",
+    followers: 1234,
+  });
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  useEffect(() => {
-    setUser({
-      name: "John Doe",
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=John",
-      followers: 1234,
-    });
-  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("auth_token");

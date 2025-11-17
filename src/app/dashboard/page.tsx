@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import DashboardHeader from "@/components/Dashboard/DashboardHeader";
-import Sidebar from "@/components/Dashboard/Sidebar";
+import Sidebar from "../../components/Dashboard/Sidebar";
 import MyPosts from "@/components/Dashboard/MyPosts";
-import Comments from "@/components/Dashboard/Comments";
-import Profile from "@/components/Dashboard/Profile";
+import Comments from "../../components/Dashboard/Comments";
+import Profile from "../../components/Dashboard/Profile";
 import Settings from "@/components/Dashboard/Settings";
 import NewPostButton from "@/components/Dashboard/NewPostButton";
 
