@@ -1,8 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import DashboardHeader from "@/components/Dashboard/DashboardHeader";
-import Sidebar from "@/components/Dashboard/Sidebar";
 import MyPosts from "@/components/Dashboard/MyPosts";
 import Comments from "@/components/Dashboard/Comments";
 import Profile from "@/components/Dashboard/Profile";
@@ -12,34 +9,7 @@ import NewPostButton from "@/components/Dashboard/NewPostButton";
 type TabType = "dashboard" | "posts" | "comments" | "profile" | "settings";
 
 export default function DashboardPage() {
-  const [activeTab, setActiveTab] = useState<TabType>("dashboard");
-
-  const renderContent = () => {
-    switch (activeTab) {
-      case "posts":
-        return <PostsContent />;
-      case "comments":
-        return <Comments />;
-      case "profile":
-        return <Profile />;
-      case "settings":
-        return <Settings />;
-      default:
-        return <DashboardContent />;
-    }
-  };
-
-  return (
-    <div className="min-h-screen bg-white">
-      <DashboardHeader />
-      <div className="flex">
-        <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
-        <main className="flex-1 p-8">
-          {renderContent()}
-        </main>
-      </div>
-    </div>
-  );
+  return <DashboardContent />;
 }
 
 function DashboardContent() {

@@ -11,6 +11,10 @@ const nav = [
   { href: "/editor", label: "Write" },
 ];
 
+const authNav = [
+  { href: "/dashboard", label: "Dashboard" },
+];
+
 export default function Header() {
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
@@ -49,6 +53,11 @@ export default function Header() {
         {/* Nav */}
         <nav className="hidden sm:flex items-center gap-4 text-sm">
           {nav.map((n) => (
+            <Link key={n.href} href={n.href} className="hover:underline underline-offset-4">
+              {n.label}
+            </Link>
+          ))}
+          {user && authNav.map((n) => (
             <Link key={n.href} href={n.href} className="hover:underline underline-offset-4">
               {n.label}
             </Link>

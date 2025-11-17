@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import RichTextEditor from "./RichTextEditor";
 import DashboardHeader from "@/components/Dashboard/DashboardHeader";
-import RichTextEditor from "./RichTextEditor"; // keep or create this component
 
 export default function EditorClient() {
   const router = useRouter();
