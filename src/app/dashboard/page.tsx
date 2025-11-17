@@ -16,17 +16,17 @@ function DashboardContent() {
   return (
     <div>
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-4xl font-bold text-gray-900">Dashboard</h1>
+        <h1 className="text-4xl font-bold text-white">Dashboard</h1>
         <NewPostButton />
       </div>
 
       <div className="mb-12">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Your Posts</h2>
+        <h2 className="text-2xl font-bold text-gray-200 mb-6">Your Posts</h2>
         <MyPosts />
       </div>
 
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Recent Activity</h2>
+        <h2 className="text-2xl font-bold text-gray-200 mb-6">Recent Activity</h2>
         <RecentActivity />
       </div>
     </div>
@@ -70,14 +70,14 @@ function RecentActivity() {
   ];
 
   return (
-    <div className="border border-gray-200 rounded-lg overflow-hidden">
+    <div className="border border-gray-800 rounded-lg overflow-hidden">
       {activities.map((activity) => (
         <div
           key={activity.id}
-          className="px-6 py-4 border-b border-gray-200 last:border-b-0 flex justify-between items-center hover:bg-gray-50 transition"
+          className="px-6 py-4 border-b border-gray-800 last:border-b-0 flex justify-between items-center hover:bg-gray-800 transition"
         >
-          <p className="text-gray-800 font-medium">{activity.text}</p>
-          <span className="text-gray-500 text-sm">{activity.date}</span>
+          <p className="text-gray-200 font-medium">{activity.text}</p>
+          <span className="text-gray-400 text-sm">{activity.date}</span>
         </div>
       ))}
     </div>
