@@ -24,6 +24,22 @@ export default function NewPostModal({ onClose }: NewPostModalProps) {
     try {
       const token = typeof window !== "undefined" ? localStorage.getItem("auth_token") : null;
 
+      // First, get the current user's ID
+      const userResponse = await fetch("/api/auth/me", {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+
+      if (!userResponse.ok) {
+        throw new Error("Failed to fetch user information");
+      }
+
+      const userData = await userResponse.json();
+      const userId = userData?.data?.user?._id;
+
+      if (!userId) {
+        throw new Error("User not authenticated");
+      }
+
       const response = await fetch("/api/posts", {
         method: "POST",
         headers: {
@@ -34,6 +50,7 @@ export default function NewPostModal({ onClose }: NewPostModalProps) {
           title: title.trim(),
           content: "",
           published: false,
+          author: userId, // Include the user's ID as the author
         }),
       });
 
