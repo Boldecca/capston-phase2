@@ -8,13 +8,17 @@ export const metadata: Metadata = {
   title: "Dashboard | MediumX",
 };
 
-export default function DashboardLayout({
-  children,
-  params,
-}: {
+interface DashboardLayoutProps {
   children: ReactNode;
-  params: { tab?: string[] };
-}) {
+  params: { 
+    tab?: string[];
+  };
+}
+
+export default function DashboardLayout({ 
+  children, 
+  params 
+}: DashboardLayoutProps) {
   const activeTab = (params?.tab?.[0] as TabType) || "dashboard";
 
   return (
