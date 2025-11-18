@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { Metadata } from "next";
 import Sidebar from "@/components/Dashboard/Sidebar";
 
 type TabType = "dashboard" | "posts" | "comments" | "profile" | "settings";
@@ -8,9 +9,12 @@ interface DashboardLayoutProps {
   params: { tab?: string[] };
 }
 
+export const metadata: Metadata = {
+  title: "Dashboard | MediumX",
+};
+
 export default function DashboardLayout({ children, params }: DashboardLayoutProps) {
-  // Get the active tab from the URL
-  const activeTab = (params.tab?.[0] as TabType) || "dashboard";
+  const activeTab = (params?.tab?.[0] as TabType) || "dashboard";
 
   return (
     <div className="flex min-h-[calc(100vh-3.5rem)] bg-gray-900 text-white">
