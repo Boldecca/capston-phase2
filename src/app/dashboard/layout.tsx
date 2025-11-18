@@ -4,16 +4,17 @@ import Sidebar from "@/components/Dashboard/Sidebar";
 
 type TabType = "dashboard" | "posts" | "comments" | "profile" | "settings";
 
-interface DashboardLayoutProps {
-  children: ReactNode;
-  params: { tab?: string[] };
-}
-
 export const metadata: Metadata = {
   title: "Dashboard | MediumX",
 };
 
-export default function DashboardLayout({ children, params }: DashboardLayoutProps) {
+export default function DashboardLayout({
+  children,
+  params,
+}: {
+  children: ReactNode;
+  params: { tab?: string[] };
+}) {
   const activeTab = (params?.tab?.[0] as TabType) || "dashboard";
 
   return (
