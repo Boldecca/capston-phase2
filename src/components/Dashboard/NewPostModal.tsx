@@ -21,13 +21,35 @@ export default function NewPostModal({ onClose }: NewPostModalProps) {
     }
 
     setLoading(true);
+    
+    // Get token from cookies
+    const getToken = () => {
+      if (typeof window === 'undefined') return null;
+      const cookie = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('SESSION_COOKIE='));
+      return cookie ? cookie.split('=')[1] : null;
+    };
+
     try {
-      const token = typeof window !== "undefined" ? localStorage.getItem("auth_token") : null;
+      const token = getToken();
+      
+      if (!token) {
+        throw new Error("Please sign in to create a post");
+      }
 
       // First, get the current user's ID
       const userResponse = await fetch("/api/auth/me", {
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
       });
+
+      if (userResponse.status === 401) {
+        // Token is invalid or expired
+        throw new Error("Your session has expired. Please sign in again.");
+      }
 
       if (!userResponse.ok) {
         throw new Error("Failed to fetch user information");
@@ -37,13 +59,14 @@ export default function NewPostModal({ onClose }: NewPostModalProps) {
       const userId = userData?.data?.user?._id;
 
       if (!userId) {
-        throw new Error("User not authenticated");
+        throw new Error("User not found. Please try signing in again.");
       }
 
       const response = await fetch("/api/posts", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
         body: JSON.stringify({
