@@ -31,7 +31,7 @@ export default function SignupPage() {
         const j = await res.json().catch(() => ({}));
         throw new Error((j as any).error || "Signup failed");
       }
-      router.push("/account");
+      router.push("/login?registered=true");
     } catch (err: any) {
       setError(err.message || "Signup failed");
     } finally {
