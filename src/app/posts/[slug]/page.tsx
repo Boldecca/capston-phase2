@@ -1,14 +1,20 @@
 import Container from "@/components/Container";
 import Image from "next/image";
-import { getPostBySlug } from "@/lib/store";
+import { getPostBySlug } from "@/lib/posts";
 import { renderMarkdown } from "@/components/Editor/markdown-utils";
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   return { title: `${params.slug} | MediumX` };
 }
 
-export default function PostDetailPage({ params }: { params: { slug: string } }) {
-  const post = getPostBySlug(params.slug);
+export default async function PostDetailPage({ params }: { params: { slug: string } }) {
+  let post = null;
+  try {
+    post = await getPostBySlug(params.slug);
+  } catch (error) {
+    console.error("[PostDetailPage] Failed to load post:", error);
+  }
+
   if (!post) {
     return (
       <Container className="py-10">
@@ -17,14 +23,19 @@ export default function PostDetailPage({ params }: { params: { slug: string } })
       </Container>
     );
   }
+
   return (
     <Container className="py-10">
-      <div className="mb-2 text-xs text-muted-foreground">{new Date(post.createdAt).toLocaleDateString()} • {post.state}</div>
+      <div className="mb-2 text-xs text-muted-foreground">
+        {new Date(post.createdAt).toLocaleDateString()} • {post.status}
+      </div>
       <h1 className="text-3xl font-semibold mb-4">{post.title}</h1>
-      {post.tags.length ? (
+      {post.tags?.length ? (
         <div className="mb-4 flex flex-wrap gap-1">
           {post.tags.map((t) => (
-            <span key={t} className="rounded-full bg-muted px-2 py-0.5 text-xs">{t}</span>
+            <span key={t} className="rounded-full bg-muted px-2 py-0.5 text-xs">
+              {t}
+            </span>
           ))}
         </div>
       ) : null}

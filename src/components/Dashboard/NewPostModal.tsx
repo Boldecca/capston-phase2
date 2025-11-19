@@ -56,7 +56,7 @@ export default function NewPostModal({ onClose }: NewPostModalProps) {
       }
 
       const userData = await userResponse.json();
-      const userId = userData?.data?.user?._id;
+      const userId = userData?.data?.user?.id;
 
       if (!userId) {
         throw new Error("User not found. Please try signing in again.");
@@ -66,14 +66,12 @@ export default function NewPostModal({ onClose }: NewPostModalProps) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
         body: JSON.stringify({
           title: title.trim(),
           content: "",
           published: false,
-          author: userId, // Include the user's ID as the author
+          authorId: userId,
         }),
       });
 
@@ -94,14 +92,14 @@ export default function NewPostModal({ onClose }: NewPostModalProps) {
         return;
       }
 
-      const post = body;
-      if (!post || !post._id) {
-        console.warn("Created post response missing _id:", post);
+      const post = body?.data;
+      if (!post || !post.slug) {
+        console.warn("Created post response missing slug:", post);
         setErrorMsg("Post created but response is unexpected. Check server logs.");
         return;
       }
 
-      router.push(`/editor/${post._id}`);
+      router.push(`/posts/${post.slug}`);
       onClose();
     } catch (err) {
       console.error("Network or client error creating post:", err);

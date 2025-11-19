@@ -1,64 +1,36 @@
-export type SessionUser = { id: string; name: string; email: string; image?: string };
+import { supabase } from './supabase'
 
-export const SESSION_COOKIE = "session";
-
-type UserRecord = SessionUser & { password: string };
-type SessionRecord = { token: string; userId: string; createdAt: number };
-
-// Persist maps across Fast Refresh in development to avoid losing sessions
-declare global {
-  // eslint-disable-next-line no-var
-  var __auth_users__: Map<string, UserRecord> | undefined;
-  // eslint-disable-next-line no-var
-  var __auth_sessions__: Map<string, SessionRecord> | undefined;
+// Sign up with email and password
+export async function signUp(email: string, password: string, name: string) {
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        name,
+      },
+    },
+  })
+  return { data, error }
 }
 
-const users: Map<string, UserRecord> = (globalThis.__auth_users__ ??= new Map());
-const sessions: Map<string, SessionRecord> = (globalThis.__auth_sessions__ ??= new Map());
-
-export function getUserByEmail(email: string) {
-  for (const u of users.values()) {
-    if (u.email.toLowerCase() === email.toLowerCase()) return u;
-  }
-  return undefined;
+// Sign in with email and password
+export async function signIn(email: string, password: string) {
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  })
+  return { data, error }
 }
 
-export function createUser(name: string, email: string, password: string): SessionUser {
-  const id = crypto.randomUUID();
-  const rec: UserRecord = { id, name, email, password };
-  users.set(id, rec);
-  return { id, name, email };
+// Sign out
+export async function signOut() {
+  const { error } = await supabase.auth.signOut()
+  return { error }
 }
 
-export function verifyUser(email: string, password: string): SessionUser | undefined {
-  const u = getUserByEmail(email);
-  if (!u) return undefined;
-  if (u.password !== password) return undefined;
-  return { id: u.id, name: u.name, email: u.email };
-}
-
-export function createSession(userId: string) {
-  const token = crypto.randomUUID();
-  const rec: SessionRecord = { token, userId, createdAt: Date.now() };
-  sessions.set(token, rec);
-  return token;
-}
-
-export function getUserBySession(token?: string): SessionUser | undefined {
-  if (!token) return undefined;
-  const s = sessions.get(token);
-  if (!s) return undefined;
-  const user = users.get(s.userId);
-  if (!user) return undefined;
-  return { id: user.id, name: user.name, email: user.email };
-}
-
-export function revokeSession(token?: string) {
-  if (!token) return;
-  sessions.delete(token);
-}
-
-export function getAuthToken() {
-  if (typeof window === "undefined") return undefined;
-  return localStorage.getItem("token") || undefined;
+// Get current user
+export async function getCurrentUser() {
+  const { data: { user } } = await supabase.auth.getUser()
+  return user
 }

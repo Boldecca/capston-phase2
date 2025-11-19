@@ -18,7 +18,7 @@ export default function EditorClient() {
       const res = await fetch("/api/posts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, content, published: false }),
+        body: JSON.stringify({ title, content, state: "draft" }),
       });
       if (!res.ok) throw new Error("Save failed");
       router.push("/dashboard");
@@ -37,7 +37,7 @@ export default function EditorClient() {
       const res = await fetch("/api/posts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, content, published: true }),
+        body: JSON.stringify({ title, content, state: "published" }),
       });
       if (!res.ok) throw new Error("Publish failed");
       router.push("/dashboard");

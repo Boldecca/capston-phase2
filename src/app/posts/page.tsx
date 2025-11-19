@@ -1,14 +1,20 @@
 import Container from "@/components/Container";
 import Link from "next/link";
 import Image from "next/image";
-import { listPosts } from "@/lib/store";
+import { getPublishedPosts } from "@/lib/posts";
 
 export const metadata = {
   title: "Posts | MediumX",
 };
 
-export default function PostsPage() {
-  const posts = listPosts();
+export default async function PostsPage() {
+  let posts = [];
+  try {
+    posts = await getPublishedPosts();
+  } catch (error) {
+    console.error("[PostsPage] Failed to load posts:", error);
+  }
+
   return (
     <Container className="py-10">
       <h1 className="text-3xl font-semibold mb-6">Latest Posts</h1>
@@ -25,14 +31,18 @@ export default function PostsPage() {
                   </div>
                 ) : null}
                 <h3 className="mb-1 text-base font-semibold">{p.title}</h3>
-                {p.tags.length ? (
+                {p.tags?.length ? (
                   <div className="mb-2 flex flex-wrap gap-1">
                     {p.tags.map((t) => (
-                      <span key={t} className="rounded-full bg-muted px-2 py-0.5 text-xs">{t}</span>
+                      <span key={t} className="rounded-full bg-muted px-2 py-0.5 text-xs">
+                        {t}
+                      </span>
                     ))}
                   </div>
                 ) : null}
-                <div className="text-xs text-muted-foreground">{new Date(p.createdAt).toLocaleDateString()} • {p.state}</div>
+                <div className="text-xs text-muted-foreground">
+                  {new Date(p.createdAt).toLocaleDateString()} • {p.status}
+                </div>
               </Link>
             </article>
           ))}

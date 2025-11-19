@@ -1,25 +1,49 @@
 import { NextRequest, NextResponse } from "next/server";
-import mongoose from "@/lib/mongodb";
-import Post from "@/models/Post";
+import { createPostRecord, ensureUniqueSlug, getPublishedPosts } from "@/lib/posts";
 
-// GET /api/posts - list published posts
 export async function GET() {
-  await mongoose.connect(process.env.MONGODB_URI as string);
-  const posts = await Post.find({ published: true })
-    .populate("author", "username avatarUrl")
-    .sort({ createdAt: -1 })
-    .limit(20)
-    .lean();
-  return NextResponse.json(posts);
+  try {
+    const posts = await getPublishedPosts();
+    return NextResponse.json({ data: posts });
+  } catch (error: any) {
+    console.error("[GET /api/posts] Error:", error);
+    return NextResponse.json({ error: error?.message || "Failed to load posts" }, { status: 500 });
+  }
 }
 
-// POST /api/posts - create a post (no auth here; integrate auth separately)
 export async function POST(req: NextRequest) {
-  await mongoose.connect(process.env.MONGODB_URI as string);
-  const body = await req.json();
-  if (!body.title || !body.content || !body.author) {
-    return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+  try {
+    const body = await req.json().catch(() => ({}));
+    const title = typeof body?.title === "string" ? body.title.trim() : "";
+    const content = typeof body?.content === "string" ? body.content.trim() : "";
+    const tags = Array.isArray(body?.tags)
+      ? body.tags
+          .map((tag) => (typeof tag === "string" ? tag.trim() : ""))
+          .filter(Boolean)
+      : [];
+    const state = body?.state === "published" ? "published" : "draft";
+    const coverImage = typeof body?.coverImage === "string" ? body.coverImage.trim() : undefined;
+    const authorId = typeof body?.authorId === "string" ? body.authorId : null;
+    const slugSource = typeof body?.slug === "string" ? body.slug.trim() : title;
+
+    if (!title || !content) {
+      return NextResponse.json({ error: "Title and content are required" }, { status: 400 });
+    }
+
+    const slug = await ensureUniqueSlug(slugSource);
+    const post = await createPostRecord({
+      title,
+      content,
+      tags,
+      state,
+      coverImage,
+      authorId,
+      slug,
+    });
+
+    return NextResponse.json({ data: post }, { status: 201 });
+  } catch (error: any) {
+    console.error("[POST /api/posts] Error:", error);
+    return NextResponse.json({ error: error?.message || "Failed to create post" }, { status: 500 });
   }
-  const post = await Post.create(body);
-  return NextResponse.json(post, { status: 201 });
 }
