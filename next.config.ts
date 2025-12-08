@@ -21,9 +21,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-};
-
-module.exports = {
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = { fs: false, net: false, tls: false };
@@ -36,6 +33,6 @@ module.exports = {
   compiler: {
     styledComponents: true,
   },
-}
+};
 
 export default nextConfig;
